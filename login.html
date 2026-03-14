@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoCkEtWoRld — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/auth.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div><div class="bg-glow glow-2"></div><div class="bg-glow glow-3"></div>
+
+  <div class="auth-container">
+    <div class="auth-logo">
+      <div class="logo-globe">🌍</div>
+      <span class="logo-text"><span class="p">P</span><span class="o1">o</span><span class="c">C</span><span class="k">k</span><span class="e1">E</span><span class="t">t</span><span class="w">W</span><span class="o2">o</span><span class="r">R</span><span class="l">l</span><span class="d">D</span></span>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your inventory world</p>
+      </div>
+
+      <div id="errorMsg" class="error-msg" style="display:none;"><i class="fa-solid fa-circle-exclamation"></i><span id="errorText"></span></div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="email"><i class="fa-solid fa-envelope"></i> Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+          <div class="password-wrap">
+            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw()"><i class="fa-solid fa-eye" id="pwIcon"></i></button>
+          </div>
+        </div>
+        <div class="forgot-link"><a href="/forgot-password.html">Forgot Password?</a></div>
+        <button type="submit" class="btn-submit" id="loginBtn">
+          <span class="btn-text">Sign In <i class="fa-solid fa-arrow-right"></i></span>
+          <span class="btn-loader" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span>
+        </button>
+      </form>
+
+      <div class="auth-footer"><p>Don't have an account? <a href="/register.html">Create Account</a></p></div>
+    </div>
+    <div class="auth-bottom-text"><p>&copy; 2026 PoCkEtWoRld — Your Inventory, Your World</p></div>
+  </div>
+
+  <script>
+    function togglePw() {
+      const f = document.getElementById('password'), i = document.getElementById('pwIcon');
+      f.type = f.type === 'password' ? 'text' : 'password';
+      i.className = f.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+    }
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      btn.querySelector('.btn-text').style.display = 'none';
+      btn.querySelector('.btn-loader').style.display = 'inline-flex';
+      document.getElementById('errorMsg').style.display = 'none';
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value })
+        });
+        const data = await res.json();
+        if (data.success) {
+          btn.classList.add('success');
+          btn.querySelector('.btn-text').textContent = '✓ Logged In!';
+          btn.querySelector('.btn-text').style.display = 'inline-flex';
+          btn.querySelector('.btn-loader').style.display = 'none';
+          setTimeout(() => window.location.href = '/', 500);
+        } else {
+          document.getElementById('errorText').textContent = data.error;
+          document.getElementById('errorMsg').style.display = 'flex';
+          btn.querySelector('.btn-text').style.display = 'inline-flex';
+          btn.querySelector('.btn-loader').style.display = 'none';
+        }
+      } catch (err) {
+        document.getElementById('errorText').textContent = 'Connection error.';
+        document.getElementById('errorMsg').style.display = 'flex';
+        btn.querySelector('.btn-text').style.display = 'inline-flex';
+        btn.querySelector('.btn-loader').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

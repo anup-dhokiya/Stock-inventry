@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoCkEtWoRld — Add Product</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">🌍</div><div class="logo-text"><span class="logo-name"><span class="lp">P</span><span class="lo">o</span><span class="lc">C</span><span class="lk">k</span><span class="le">E</span><span class="lt">t</span><span class="lw">W</span><span class="lo2">o</span><span class="lr">R</span><span class="ll">l</span><span class="ld">D</span></span><span class="logo-tagline">Your Inventory World</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigate</div>
+      <a href="/" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="nav-label">Dashboard</span></a>
+      <a href="/add-product.html" class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-plus-circle"></i></span><span class="nav-label">Add Product</span><span class="nav-active-bar"></span></a>
+      <a href="/stock-check.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span><span class="nav-label">Stock Check</span></a>
+    </nav>
+    <div class="sidebar-footer"><div class="sidebar-user"><div class="user-avatar-sm"><span id="sidebarInitials">--</span><span class="online-dot"></span></div><div class="user-info"><span class="user-name-sm" id="sidebarUserName">Loading...</span><span class="user-role" id="sidebarUserRole">—</span></div></div></div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left"><button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button><div class="breadcrumb"><span class="breadcrumb-root">PoCkEtWoRld</span><i class="fa-solid fa-chevron-right breadcrumb-sep"></i><span class="breadcrumb-current">Add Product</span></div></div>
+      <div class="topbar-right"><div class="topbar-user" id="topbarUser" title="Profile"><div class="user-avatar"><span id="topbarInitials">--</span></div><div class="user-details"><span class="user-name" id="topbarUserName">Loading...</span><span class="user-role-badge" id="topbarUserRole">—</span></div><i class="fa-solid fa-chevron-down user-chevron"></i></div></div>
+    </header>
+
+    <main class="content">
+      <div class="quick-nav">
+        <a href="/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="/add-product.html" class="active"><i class="fa-solid fa-plus"></i> Add Product</a>
+        <a href="/stock-check.html"><i class="fa-solid fa-search"></i> Stock Check</a>
+      </div>
+
+      <div class="page-header"><div><h1 class="page-title">Add New Product</h1><p class="page-subtitle">Add to your personal inventory</p></div><div class="page-header-actions"><a href="/" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a></div></div>
+
+      <div class="inner-page-container">
+        <div class="form-card">
+          <h2><i class="fa-solid fa-box"></i> Product Details</h2>
+          <p class="form-subtitle">Fill in the details below</p>
+          <div id="formMsg"></div>
+          <form id="addForm">
+            <div class="form-grid">
+              <div class="form-group"><label for="pName"><i class="fa-solid fa-tag"></i> Product Name *</label><input type="text" id="pName" placeholder="e.g. Wireless Headphones" required /></div>
+              <div class="form-group"><label for="pSku"><i class="fa-solid fa-barcode"></i> SKU *</label><input type="text" id="pSku" placeholder="e.g. ELC-2001" required /></div>
+              <div class="form-group"><label for="pCat"><i class="fa-solid fa-layer-group"></i> Category</label>
+                <select id="pCat"><option value="Electronics">Electronics</option><option value="Accessories">Accessories</option><option value="Furniture">Furniture</option><option value="Apparel">Apparel</option><option value="Consumables">Consumables</option><option value="General">General</option></select>
+              </div>
+              <div class="form-group"><label for="pLoc"><i class="fa-solid fa-warehouse"></i> Location</label><input type="text" id="pLoc" placeholder="e.g. WH-A / Bay 3" /></div>
+              <div class="form-group"><label for="pStock"><i class="fa-solid fa-cubes"></i> Current Stock</label><input type="number" id="pStock" value="0" min="0" /></div>
+              <div class="form-group"><label for="pMax"><i class="fa-solid fa-arrow-up-9-1"></i> Max Capacity</label><input type="number" id="pMax" value="100" min="1" /></div>
+            </div>
+            <div class="form-actions"><button type="reset" class="btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset</button><button type="submit" class="btn-primary" id="submitBtn"><i class="fa-solid fa-plus"></i> <span id="submitText">Add Product</span></button></div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/assets/profile.js"></script>
+  <script>
+    document.getElementById('addForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const m=document.getElementById('formMsg'), t=document.getElementById('submitText');
+      t.textContent='Adding...';
+      try {
+        const res = await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({name:document.getElementById('pName').value,sku:document.getElementById('pSku').value,
+            category:document.getElementById('pCat').value,stock:document.getElementById('pStock').value,
+            max_stock:document.getElementById('pMax').value,location:document.getElementById('pLoc').value})});
+        const d = await res.json();
+        if(d.success) { m.innerHTML='<div class="inline-msg success"><i class="fa-solid fa-circle-check"></i>'+d.message+' Redirecting...</div>';
+          e.target.reset(); setTimeout(()=>window.location.href='/', 1200);
+        } else m.innerHTML='<div class="inline-msg error"><i class="fa-solid fa-circle-exclamation"></i>'+d.error+'</div>';
+      } catch(err) { m.innerHTML='<div class="inline-msg error"><i class="fa-solid fa-circle-exclamation"></i>Connection error.</div>'; }
+      t.textContent='Add Product';
+    });
+  </script>
+</body>
+</html>

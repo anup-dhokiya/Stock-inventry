@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoCkEtWoRld — Stock Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div class="logo-icon">🌍</div><div class="logo-text"><span class="logo-name"><span class="lp">P</span><span class="lo">o</span><span class="lc">C</span><span class="lk">k</span><span class="le">E</span><span class="lt">t</span><span class="lw">W</span><span class="lo2">o</span><span class="lr">R</span><span class="ll">l</span><span class="ld">D</span></span><span class="logo-tagline">Your Inventory World</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigate</div>
+      <a href="/" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="nav-label">Dashboard</span></a>
+      <a href="/add-product.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-plus-circle"></i></span><span class="nav-label">Add Product</span></a>
+      <a href="/stock-check.html" class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span><span class="nav-label">Stock Check</span><span class="nav-active-bar"></span></a>
+    </nav>
+    <div class="sidebar-footer"><div class="sidebar-user"><div class="user-avatar-sm"><span id="sidebarInitials">--</span><span class="online-dot"></span></div><div class="user-info"><span class="user-name-sm" id="sidebarUserName">Loading...</span><span class="user-role" id="sidebarUserRole">—</span></div></div></div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left"><button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button><div class="breadcrumb"><span class="breadcrumb-root">PoCkEtWoRld</span><i class="fa-solid fa-chevron-right breadcrumb-sep"></i><span class="breadcrumb-current">Stock Check</span></div></div>
+      <div class="topbar-right"><div class="topbar-user" id="topbarUser" title="Profile"><div class="user-avatar"><span id="topbarInitials">--</span></div><div class="user-details"><span class="user-name" id="topbarUserName">Loading...</span><span class="user-role-badge" id="topbarUserRole">—</span></div><i class="fa-solid fa-chevron-down user-chevron"></i></div></div>
+    </header>
+
+    <main class="content">
+      <div class="quick-nav">
+        <a href="/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="/add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+        <a href="/stock-check.html" class="active"><i class="fa-solid fa-search"></i> Stock Check</a>
+      </div>
+
+      <div class="page-header"><div><h1 class="page-title">Stock Check</h1><p class="page-subtitle">Find how much product is left</p></div><div class="page-header-actions"><a href="/" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a></div></div>
+
+      <div class="inner-page-container">
+        <div class="form-card">
+          <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Search Inventory</h2>
+          <p class="form-subtitle">Search by name, SKU, or category</p>
+          <div class="form-group" style="margin-bottom:10px;"><div style="position:relative;"><i class="fa-solid fa-search" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);"></i><input type="text" id="stockSearch" placeholder="Type product name or SKU..." style="padding-left:40px;width:100%;" /></div></div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+            <select id="stockCatFilter" class="table-filter-select"><option value="all">All Categories</option><option value="Electronics">Electronics</option><option value="Accessories">Accessories</option><option value="Furniture">Furniture</option><option value="Apparel">Apparel</option><option value="Consumables">Consumables</option></select>
+            <select id="stockStatusFilter" class="table-filter-select"><option value="all">All Status</option><option value="in-stock">In Stock</option><option value="low-stock">Low Stock</option><option value="out-of-stock">Out of Stock</option></select>
+          </div>
+          <div id="stockSummary" style="display:none;padding:12px 16px;border-radius:12px;background:var(--orange-dim);border:1px solid rgba(255,107,53,0.12);margin-bottom:14px;">
+            <div style="display:flex;gap:20px;flex-wrap:wrap;">
+              <div><span style="font-size:11px;color:var(--text-muted);display:block;">Found</span><span style="font-size:18px;font-weight:700;" id="sumCount">0</span> <span style="font-size:12px;color:var(--text-muted);">products</span></div>
+              <div><span style="font-size:11px;color:var(--text-muted);display:block;">Total Units</span><span style="font-size:18px;font-weight:700;" id="sumUnits">0</span></div>
+            </div>
+          </div>
+          <div id="stockResults"><div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>Search or view all products below</p></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/assets/profile.js"></script>
+  <script>
+    const CC={Electronics:{bg:'rgba(255,107,53,0.14)',color:'#ff6b35'},Accessories:{bg:'rgba(0,212,170,0.14)',color:'#00d4aa'},Furniture:{bg:'rgba(255,209,102,0.14)',color:'#ffd166'},Apparel:{bg:'rgba(236,72,153,0.14)',color:'#ec4899'},Consumables:{bg:'rgba(168,85,247,0.14)',color:'#a855f7'},General:{bg:'rgba(255,107,53,0.14)',color:'#ff6b35'}};
+    let allP=[]; async function load(){try{allP=await(await fetch('/api/products')).json();}catch(e){allP=[]}} load().then(()=>setTimeout(doS,200));
+    function doS(){const q=document.getElementById('stockSearch').value.toLowerCase().trim(),c=document.getElementById('stockCatFilter').value,st=document.getElementById('stockStatusFilter').value,r=document.getElementById('stockResults'),sm=document.getElementById('stockSummary');
+      let f=allP.filter(p=>{return(!q||p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q))&&(c==='all'||p.category===c)&&(st==='all'||p.status===st);});
+      if(f.length===0){sm.style.display='none';r.innerHTML='<div class="empty-state"><i class="fa-solid fa-box-open"></i><p>'+(allP.length===0?'No products. <a href="/add-product.html">Add first!</a>':'No match')+'</p></div>';return;}
+      document.getElementById('sumCount').textContent=f.length;document.getElementById('sumUnits').textContent=f.reduce((s,p)=>s+p.stock,0).toLocaleString();sm.style.display='block';
+      r.innerHTML=f.map(p=>{const pct=p.max_stock>0?Math.round((p.stock/p.max_stock)*100):0;const bc=p.status==='in-stock'?'#22c55e':p.status==='low-stock'?'#ffd166':'#ef4444';const cc=CC[p.category]||CC.General;const ini=p.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();const sl=p.status==='in-stock'?'In Stock':p.status==='low-stock'?'Low Stock':'Out of Stock';
+        return`<div class="stock-result-card"><div class="sr-thumb" style="background:${cc.bg};color:${cc.color}">${ini}</div><div class="sr-info"><div class="sr-name">${p.name}</div><div class="sr-sku">${p.sku} · ${p.category}</div></div><div class="sr-stock"><span class="sr-stock-num" style="color:${bc}">${p.stock}</span><span class="sr-stock-label">of ${p.max_stock}</span><div class="sr-bar-wrap"><div class="sr-bar" style="width:${Math.max(0,Math.min(100,pct))}%;background:${bc}"></div></div></div><span class="status-badge ${p.status}" style="margin-left:12px;">${sl}</span></div>`;}).join('');
+    }
+    document.getElementById('stockSearch').addEventListener('input',doS);
+    document.getElementById('stockCatFilter').addEventListener('change',doS);
+    document.getElementById('stockStatusFilter').addEventListener('change',doS);
+  </script>
+</body>
+</html>
