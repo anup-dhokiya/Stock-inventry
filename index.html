@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoCkEtWoRld — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <style>
+    /* Tabs Styling */
+    .tab-bar { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .tab-btn { padding: 10px 20px; border-radius: 10px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); cursor: pointer; font-family: var(--font); font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .tab-btn:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+    .tab-btn.active { background: var(--orange-dim); color: var(--orange); border-color: rgba(255,107,53,0.2); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Module Specific */
+    .cart-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+    .cart-item-info { flex: 1; }
+    .cart-item-qty { width: 60px; text-align: center; }
+    .badge-days { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🌍</div>
+      <div class="logo-text">
+        <span class="logo-name"><span class="lp">P</span><span class="lo">o</span><span class="lc">C</span><span class="lk">k</span><span class="le">E</span><span class="lt">t</span><span class="lw">W</span><span class="lo2">o</span><span class="lr">R</span><span class="ll">l</span><span class="ld">D</span></span>
+        <span class="logo-tagline">Your Inventory World</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigate</div>
+      <a href="#" class="nav-item active" data-tab="overview"><span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="nav-label">Dashboard</span></a>
+      <a href="#" class="nav-item" data-tab="billing"><span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="nav-label">Billing/Receipts</span></a>
+      <a href="#" class="nav-item" data-tab="logistics"><span class="nav-icon"><i class="fa-solid fa-truck-fast"></i></span><span class="nav-label">Logistics</span><span class="nav-badge" id="navDeliveryCount">0</span></a>
+      <a href="#" class="nav-item" data-tab="stock-control"><span class="nav-icon"><i class="fa-solid fa-boxes-packing"></i></span><span class="nav-label">Stock Control</span></a>
+      <div class="nav-section-label">Inventory</div>
+      <a href="/add-product.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-plus-circle"></i></span><span class="nav-label">Add Product</span></a>
+      <a href="/stock-check.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span><span class="nav-label">Search Stock</span></a>
+    </nav>
+    <!-- REDUNDANT FOOTER REMOVED -->
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="breadcrumb"><span class="breadcrumb-root">PoCkEtWoRld</span><i class="fa-solid fa-chevron-right breadcrumb-sep"></i><span class="breadcrumb-current" id="breadTitle">Dashboard</span></div>
+      </div>
+      <div class="search-bar"><i class="fa-solid fa-magnifying-glass search-icon"></i><input type="text" id="globalSearch" placeholder="Search world..." autocomplete="off" /></div>
+      <div class="topbar-right">
+        <div class="topbar-user" id="topbarUser" title="Account">
+          <div class="user-avatar" id="topbarInitials">--</div>
+          <div class="user-details"><span class="user-name" id="topbarUserName">Loading...</span><span class="user-role-badge" id="topbarUserRole">Role</span></div>
+          <i class="fa-solid fa-chevron-down user-chevron"></i>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+        <button class="tab-btn" onclick="showTab('billing')">Billing/Receipts</button>
+        <button class="tab-btn" onclick="showTab('logistics')">Logistics/Deliveries</button>
+        <button class="tab-btn" onclick="showTab('stock-control')">Stock Control</button>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <section id="tab-overview" class="tab-content active">
+        <div class="page-header"><div><h1 class="page-title">Dashboard</h1><p class="page-subtitle" id="welcomeMsg">Welcome to your dashboard</p></div></div>
+        <div class="widgets-grid">
+          <div class="widget-card glow-orange"><div class="widget-icon-wrap orange"><i class="fa-solid fa-box"></i></div><div class="widget-body"><span class="widget-label">Products</span><span class="widget-value" id="wv-total">0</span></div></div>
+          <div class="widget-card glow-teal"><div class="widget-icon-wrap teal"><i class="fa-solid fa-cubes"></i></div><div class="widget-body"><span class="widget-label">Total Units</span><span class="widget-value" id="wv-units">0</span></div></div>
+          <div class="widget-card glow-gold"><div class="widget-icon-wrap gold"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="widget-body"><span class="widget-label">Low Stock</span><span class="widget-value" id="wv-low">0</span></div></div>
+          <div class="widget-card glow-red"><div class="widget-icon-wrap red"><i class="fa-solid fa-circle-xmark"></i></div><div class="widget-body"><span class="widget-label">Out Stock</span><span class="widget-value" id="wv-out">0</span></div></div>
+          <div class="widget-card glow-green"><div class="widget-icon-wrap green"><i class="fa-solid fa-receipt"></i></div><div class="widget-body"><span class="widget-label">Receipts</span><span class="widget-value" id="wv-receipts">0</span></div></div>
+          <div class="widget-card glow-purple"><div class="widget-icon-wrap purple"><i class="fa-solid fa-chart-line"></i></div><div class="widget-body"><span class="widget-label">Stock Health</span><span class="widget-value" id="healthPct">0%</span></div></div>
+        </div>
+        <div class="info-grid">
+          <div class="info-card glass"><h3 class="info-card-title">Stock Analysis</h3><div class="chart-wrapper"><canvas id="mainChart"></canvas></div></div>
+          <div class="info-card glass"><h3 class="info-card-title">Categories</h3><div id="catBreakdown" class="cat-list"></div></div>
+        </div>
+        <div class="table-card glass">
+          <div class="table-header"><div><h2 class="table-title">Recent Stock Activity</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Stock</th><th>Status</th></tr></thead><tbody id="productTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- BILLING TAB -->
+      <section id="tab-billing" class="tab-content">
+        <div class="page-header"><div><h1 class="page-title">Billing & Receipts</h1><p class="page-subtitle">Generate bills and receipts for customers</p></div></div>
+        <div class="info-grid" style="grid-template-columns: 1.2fr 0.8fr;">
+          <div class="form-card">
+            <h2><i class="fa-solid fa-plus-circle"></i> New Receipt</h2><p class="form-subtitle">Add items and customer details</p>
+            <div id="rcFormMsg"></div>
+            <div class="form-grid">
+              <div class="form-group full-width"><label>Customer Name</label><input type="text" id="rcCustomer" placeholder="Walk-in Customer" /></div>
+              <div class="form-group"><label>Search Product</label>
+                <select id="riProductSelect"><option value="">Select a product...</option></select>
+              </div>
+              <div class="form-group"><label>Price (₹)</label><input type="number" id="riPrice" placeholder="0.00" /></div>
+              <div class="form-group"><label>Quantity</label><input type="number" id="riQty" value="1" min="1" /></div>
+              <div class="form-group" style="justify-content: flex-end; display:flex; flex-direction:row; align-items:flex-end; gap:8px;">
+                <button class="btn-primary" id="addReceiptItem" style="width:100%;"><i class="fa-solid fa-cart-plus"></i> Add Item</button>
+              </div>
+            </div>
+            <div class="form-section-title" style="margin-top:20px; font-size:12px; color:var(--text-muted); text-transform:uppercase;">Items in Bill</div>
+            <div id="receiptItemsList" style="margin-top:10px; min-height:100px; border:1px solid var(--border); border-radius:10px; padding:8px;"></div>
+            <div class="form-actions">
+              <select id="rcPayment" class="table-filter-select" style="min-width:120px;"><option value="cash">Cash</option><option value="upi">UPI/Online</option><option value="card">Card</option></select>
+              <button class="btn-primary" id="generateReceipt" style="background:var(--green);"><i class="fa-solid fa-file-invoice"></i> Generate & Download Bill</button>
+            </div>
+          </div>
+          <div class="info-card glass">
+            <h3 class="info-card-title">Recent Bills</h3>
+            <div id="receiptList" class="alert-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGISTICS TAB -->
+      <section id="tab-logistics" class="tab-content">
+        <div class="page-header"><div><h1 class="page-title">Logistics & Deliveries</h1><p class="page-subtitle">Track incoming and outgoing stock</p></div></div>
+        <div class="info-grid">
+          <div class="form-card">
+            <h2><i class="fa-solid fa-truck"></i> Schedule Delivery</h2>
+            <div id="delFormMsg"></div>
+            <form id="addDeliveryForm">
+              <div class="form-grid">
+                <div class="form-group full-width"><label>Product Name</label><input type="text" id="delProduct" placeholder="e.g. Wireless Mouse" required /></div>
+                <div class="form-group"><label>Supplier</label><input type="text" id="delSupplier" placeholder="e.g. Amazon B2B" /></div>
+                <div class="form-group"><label>Quantity</label><input type="number" id="delQty" value="1" min="1" /></div>
+                <div class="form-group"><label>Delivery Date</label><input type="date" id="delDate" required /></div>
+                <div class="form-group"><label>Notes</label><input type="text" id="delNotes" /></div>
+                <div class="full-width"><button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-calendar-check"></i> Schedule</button></div>
+              </div>
+            </form>
+          </div>
+          <div class="info-card glass">
+            <h3 class="info-card-title">Upcoming Deliveries</h3>
+            <div id="deliveryList" class="alert-list"></div>
+          </div>
+        </div>
+        <div class="table-card glass" style="margin-top:20px;">
+          <div class="table-header"><div><h2 class="table-title">Delivery Status</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>Qty</th><th>Supplier</th><th>Target Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="deliveryTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- STOCK CONTROL TAB -->
+      <section id="tab-stock-control" class="tab-content">
+        <div class="page-header"><div><h1 class="page-title">Stock Control</h1><p class="page-subtitle">Transfers and manual adjustments</p></div></div>
+        <div class="info-grid">
+          <div class="form-card">
+            <h2><i class="fa-solid fa-arrows-rotate"></i> Internal Transfer</h2>
+            <p class="form-subtitle">Move stock between warehouses/locations</p>
+            <div id="transferMsg"></div>
+            <form id="transferForm">
+              <div class="form-grid">
+                <div class="form-group full-width"><label>Product</label><select id="tfProductSelect" required><option value="">Select product...</option></select></div>
+                <div class="form-group"><label>To Location</label><input type="text" id="tfTo" placeholder="e.g. Warehouse B" required /></div>
+                <div class="form-group"><label>Quantity</label><input type="number" id="tfQty" value="0" min="0" /></div>
+                <div class="full-width"><button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-route"></i> Initiate Transfer</button></div>
+              </div>
+            </form>
+          </div>
+          <div class="form-card">
+            <h2><i class="fa-solid fa-sliders"></i> Stock Adjustment</h2>
+            <p class="form-subtitle">Manually fix stock levels</p>
+            <div id="adjustMsg"></div>
+            <form id="adjustForm">
+              <div class="form-grid">
+                <div class="form-group full-width"><label>Product</label><select id="adProductSelect" required><option value="">Select product...</option></select></div>
+                <div class="form-group"><label>Action</label><select id="adAction"><option value="add">Add (+)</option><option value="subtract">Subtract (-)</option><option value="set">Set To (=)</option></select></div>
+                <div class="form-group"><label>Quantity</label><input type="number" id="adQty" value="1" min="1" /></div>
+                <div class="form-group full-width"><label>Reason</label><input type="text" id="adReason" placeholder="e.g. Damaged stock" /></div>
+                <div class="full-width"><button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-check-double"></i> Apply Adjustment</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="info-grid" style="margin-top:20px;">
+          <div class="info-card glass"><h3 class="info-card-title">Recent Transfers</h3><div id="transferLog" class="alert-list"></div></div>
+          <div class="info-card glass"><h3 class="info-card-title">Recent Adjustments</h3><div id="adjustLog" class="alert-list"></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/assets/profile.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  <script src="/assets/app.js"></script>
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabId).classList.add('active');
+      const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tabId.split('-')[0]));
+      if(btn) btn.classList.add('active');
+      
+      const navItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+      if(navItem) navItem.classList.add('active');
+
+      document.getElementById('breadTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-',' ');
+      window.scrollTo(0,0);
+    }
+    // Handle sidebar nav clicks
+    document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        showTab(item.getAttribute('data-tab'));
+      });
+    });
+  </script>
+</body>
+</html>
