@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Logitech G Pro Mouse",
+    "sku": "LOG-GP-01",
+    "category": "Electronics",
+    "stock": 45,
+    "max_stock": 100,
+    "location": "Aisle 4 / Shelf B",
+    "status": "in-stock"
+  },
+  {
+    "name": "Ergonomic Office Chair",
+    "sku": "FUR-CH-88",
+    "category": "Furniture",
+    "stock": 4,
+    "max_stock": 20,
+    "location": "Warehouse Rear",
+    "status": "low-stock"
+  },
+  {
+    "name": "USB-C Charging Cable",
+    "sku": "ACC-USB-05",
+    "category": "Accessories",
+    "stock": 0,
+    "max_stock": 200,
+    "location": "Front Counter",
+    "status": "out-of-stock"
+  },
+  {
+    "name": "Cotton T-Shirt (Large)",
+    "sku": "APP-TS-09",
+    "category": "Apparel",
+    "stock": 120,
+    "max_stock": 150,
+    "location": "Apparel Bin 2",
+    "status": "in-stock"
+  }
+]
